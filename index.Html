@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Sevo Motro</title>
+    <style>
+        body{
+            background: green;
+            color: yellow;
+            font-family: monospace;
+            text-align: center;
+
+        }
+        h1{
+            font-size: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="valor">--</h1>
+    <button onclick="conectar()">CONECTAR</button>
+    <script>
+        async function conectar() {
+            const porta = await navigator.serial.requestPort();
+            await porta.open({baudRate:9600});
+
+            const leitor = porta.readable.getReader();
+            let texto = "";
+
+            while(true){
+                const {value} = await leitor.read();
+                texto += new TextDecoder().decode(value);
+
+                const linhas = texto.split("\n")
+                texto = linhas.pop();
+                linhas.forEach(L => valor.textContent = L + "°");
+            }
+
+
+            
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    
+</body>
+</html>
